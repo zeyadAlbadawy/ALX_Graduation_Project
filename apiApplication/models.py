@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
+
+from api_ecommerce import settings
 # Create your models here.
 class CustomUser(AbstractUser):
     email= models.EmailField(unique=True)
@@ -60,7 +62,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    cart = models.CharField(max_length= 20, unique=True)
+    cart_code = models.CharField(max_length= 20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -74,3 +76,37 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name} in the cart ${self.cart.cart_code}"
+    
+
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '1 - Poor'),
+        (2, '2 - Fair'),
+        (3, '3 - Good'),
+        (4, '4 - Very Good'),
+        (5, '5 - Excellent'),
+    ]
+
+    product = models.ForeignKey(Product, on_delete= models.CASCADE, related_name= "reviews")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews")
+    rating = models.PositiveIntegerField(choices=RATING_CHOICES)
+    review = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s review on {self.product.name}"
+    
+    
+    class Meta:
+        unique_together = ["user", "product"]
+        ordering = ["-created"]
+
+
+class ProductRating(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='rating')
+    average_rating = models.FloatField(default=0.0)
+    total_reviews = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.average_rating} ({self.total_reviews} reviews)"
