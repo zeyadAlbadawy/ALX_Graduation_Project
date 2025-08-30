@@ -7,8 +7,13 @@ from .serializers import (
     CategoryListSerializer, CartSerializer, CartItemSerializer,
     ReviewSerializer, WishlistSerializer
 )
+from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserProfileSerializer
+
 
 # Get the custom User model
 User = get_user_model()
@@ -221,3 +226,40 @@ def product_search(request):
 
     serializer = ProductListSerializer(products, many=True)
     return Response(serializer.data)
+
+
+
+@api_view(["POST"])
+def register_user(request):
+    serializer = UserRegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({
+            "message": "User registered successfully!",
+            "user": UserProfileSerializer(user).data
+        }, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Login
+@api_view(["POST"])
+def login_user(request):
+    serializer = UserLoginSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data["email"]
+        password = serializer.validated_data["password"]
+
+        try:
+            user_obj = User.objects.get(email=email)
+            user = authenticate(request, username=user_obj.username, password=password)
+        except User.DoesNotExist:
+            user = None
+
+        if not user:
+            return Response({"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({
+            "message": "Login successful!",
+            "user": UserProfileSerializer(user).data
+        })
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
