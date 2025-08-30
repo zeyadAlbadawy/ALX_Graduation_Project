@@ -133,12 +133,13 @@ USE_TZ = True
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Static files (CSS, JS, Images)
-STATIC_URL = '/static/'   # ✅ always start with slash
+STATIC_URL = '/static/'
 
-# This is where `collectstatic` will put everything for deployment
+# Folder where collectstatic will gather all static files for deployment
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# For development (optional) — where you keep your app-level static/
+# Only keep this if you actually have a "static" folder in your project root
+# (e.g. /Graduation_project/static/css/style.css)
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
