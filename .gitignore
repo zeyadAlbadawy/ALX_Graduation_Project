@@ -1,1 +1,16 @@
 ecommerce
+# venvs
+venv/
+.venv/
+env/
+# Django
+__pycache__/
+*.py[cod]
+*.sqlite3
+db.sqlite3
+# Static & media outputs
+staticfiles/
+media/
+# OS / editor
+.DS_Store
+*.log
