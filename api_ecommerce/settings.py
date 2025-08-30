@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--!eodm*@zf@-i9)ozsi&9(tb3-30^6pjwzes%&@6+vdz_m70h$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["zeyad01ALbadWy.pythonanywhere.com"]
 
 
 # Application definition
@@ -124,9 +124,30 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Static files (CSS, JS, Images)
+STATIC_URL = '/static/'   # ✅ always start with slash
+
+# This is where `collectstatic` will put everything for deployment
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# For development (optional) — where you keep your app-level static/
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Media files (user uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
