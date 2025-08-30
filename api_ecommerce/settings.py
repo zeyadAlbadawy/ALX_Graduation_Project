@@ -140,9 +140,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Only keep this if you actually have a "static" folder in your project root
 # (e.g. /Graduation_project/static/css/style.css)
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
 
 # Media files (user uploads)
 MEDIA_URL = '/media/'
